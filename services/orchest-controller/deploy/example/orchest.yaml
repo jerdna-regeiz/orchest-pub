@@ -4,4 +4,9 @@ metadata:
   name: cluster-1
   namespace: orchest
 spec:
-  singleNode: true
+  orchest:
+    resources:
+      builderCacheDirVolumeSize: 1Ti
+      userDirvolumeSize: 1Ti
+
+
