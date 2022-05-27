@@ -396,8 +396,6 @@ export const PipelineEditor = () => {
     setPipelineJson((value) => value, true);
   }, [setPipelineJson]);
 
-  const isContextMenuOpenState = React.useState(false);
-
   const autoLayoutPipeline = () => {
     const spacingFactor = 0.7;
     const gridMargin = 20;
@@ -652,9 +650,6 @@ export const PipelineEditor = () => {
         <PipelineViewport
           ref={pipelineViewportRef}
           canvasFuncRef={canvasFuncRef}
-          executeRun={executeRun}
-          autoLayoutPipeline={autoLayoutPipeline}
-          isContextMenuOpenState={isContextMenuOpenState}
         >
           {connections.map((connection) => {
             const { startNodeUUID, endNodeUUID } = connection;
@@ -763,9 +758,6 @@ export const PipelineEditor = () => {
               <PipelineStep
                 key={`${step.uuid}-${hash.current}`}
                 data={step}
-                executeRun={executeRun}
-                onOpenFilePreviewView={onOpenFilePreviewView}
-                onOpenNotebook={onOpenNotebook}
                 selected={selected}
                 savePositions={savePositions}
                 movedToTop={movedToTop}
@@ -776,7 +768,6 @@ export const PipelineEditor = () => {
                 interactiveConnections={interactiveConnections}
                 onDoubleClick={onDoubleClickStep}
                 getPosition={getPosition}
-                isContextMenuOpenState={isContextMenuOpenState}
               >
                 <ConnectionDot
                   incoming
