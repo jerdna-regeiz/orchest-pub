@@ -164,7 +164,8 @@ const ProjectSettingsView: React.FC = () => {
           setIsDeletingProject(true);
           return true;
         }
-      }
+      },
+      true
     );
   };
 
