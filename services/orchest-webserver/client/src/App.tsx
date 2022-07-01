@@ -8,12 +8,11 @@ import { BrowserRouter as Router, Prompt } from "react-router-dom";
 import { useIntercom } from "react-use-intercom";
 import BuildPendingDialog from "./components/BuildPendingDialog";
 import { CommandPalette } from "./components/CommandPalette";
-import HeaderBar from "./components/HeaderBar";
 import { OnboardingDialog } from "./components/Layout/OnboardingDialog";
-import { AppDrawer } from "./components/MainDrawer";
 import { SystemDialog } from "./components/SystemDialog";
 import { useAppContext } from "./contexts/AppContext";
 import { AppInnerContextProvider } from "./contexts/AppInnerContext";
+import { HeaderBar } from "./header-bar/HeaderBar";
 import Jupyter from "./jupyter/Jupyter";
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -37,9 +36,7 @@ $.fn.overflowing = function () {
 const App = () => {
   const [jupyter, setJupyter] = React.useState<Jupyter | null>(null);
   const { boot } = useIntercom();
-  const { setConfirm, isDrawerOpen, setIsDrawerOpen } = useAppContext();
-
-  const toggleDrawer = () => setIsDrawerOpen((currentValue) => !currentValue);
+  const { setConfirm } = useAppContext();
 
   // load server side config populated by flask template
   const {
@@ -104,8 +101,7 @@ const App = () => {
     >
       <AppInnerContextProvider>
         <Box sx={{ display: "flex", flex: 1, overflow: "hidden" }}>
-          <HeaderBar toggleDrawer={toggleDrawer} isDrawerOpen={isDrawerOpen} />
-          <AppDrawer isOpen={isDrawerOpen} />
+          <HeaderBar />
           <Box
             component="main"
             sx={{

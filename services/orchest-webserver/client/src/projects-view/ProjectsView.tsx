@@ -10,7 +10,7 @@ import { Layout } from "@/components/Layout";
 import { useAppContext } from "@/contexts/AppContext";
 import { useProjectsContext } from "@/contexts/ProjectsContext";
 import { useCustomRoute } from "@/hooks/useCustomRoute";
-import { useImportUrl } from "@/hooks/useImportUrl";
+import { useImportUrlFromQueryString } from "@/hooks/useImportUrl";
 import { useSendAnalyticEvent } from "@/hooks/useSendAnalyticEvent";
 import { siteMap } from "@/routingConfig";
 import type { Project } from "@/types";
@@ -236,13 +236,7 @@ const ProjectsView: React.FC = () => {
     setIsImportDialogOpen(true);
   };
 
-  const onImportComplete = (newProject: Pick<Project, "uuid" | "path">) => {
-    navigateTo(siteMap.pipeline.path, {
-      query: { projectUuid: newProject.uuid },
-    });
-  };
-
-  const [importUrl, setImportUrl] = useImportUrl();
+  const [importUrl, setImportUrl] = useImportUrlFromQueryString();
   // if user loads the app with a pre-filled import_url in their query string
   // we prompt them directly with the import modal
   React.useEffect(() => {
@@ -292,7 +286,6 @@ const ProjectsView: React.FC = () => {
         }}
       >
         <ImportDialog
-          onImportComplete={onImportComplete}
           importUrl={importUrl}
           setImportUrl={setImportUrl}
           open={isImportDialogOpen}
@@ -308,7 +301,7 @@ const ProjectsView: React.FC = () => {
         />
         <CreateProjectDialog
           projects={projects}
-          isOpen={isShowingCreateModal}
+          open={isShowingCreateModal}
           onClose={onCloseCreateProjectModal}
         />
         <PageTitle>Projects</PageTitle>
@@ -323,7 +316,6 @@ const ProjectsView: React.FC = () => {
             >
               <Button
                 variant="contained"
-                autoFocus
                 startIcon={<AddIcon />}
                 onClick={onCreateClick}
                 data-test-id="add-project"

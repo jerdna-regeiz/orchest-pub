@@ -1,5 +1,6 @@
 import { BUILD_IMAGE_SOLUTION_VIEW } from "@/components/BuildPendingDialog";
 import { Layout } from "@/components/Layout";
+import ProjectBasedView from "@/components/ProjectBasedView";
 import { useSessionsContext } from "@/contexts/SessionsContext";
 import { useInterval } from "@/hooks/use-interval";
 import {
@@ -37,7 +38,11 @@ const JupyterLabView: React.FC = () => {
   // data from route
   const { navigateTo, projectUuid, pipelineUuid, filePath } = useCustomRoute();
 
-  const { getSession, toggleSession, state } = useSessionsContext();
+  const {
+    getSession,
+    toggleSession,
+    state: { sessionsIsLoading },
+  } = useSessionsContext();
 
   // local states
   const [verifyKernelsInterval, setVerifyKernelsInterval] = React.useState<
@@ -58,7 +63,6 @@ const JupyterLabView: React.FC = () => {
       }),
     [pipelineUuid, projectUuid, getSession]
   );
-
   React.useEffect(() => {
     return () => {
       if (window.orchest.jupyter) {
@@ -110,7 +114,7 @@ const JupyterLabView: React.FC = () => {
 
   // Launch the session if it doesn't exist
   React.useEffect(() => {
-    if (!state.sessionsIsLoading && pipelineUuid && projectUuid) {
+    if (!sessionsIsLoading && pipelineUuid && projectUuid) {
       toggleSession({
         pipelineUuid,
         projectUuid,
@@ -130,13 +134,7 @@ const JupyterLabView: React.FC = () => {
         setHasEnvironmentCheckCompleted(true);
       });
     }
-  }, [
-    toggleSession,
-    state.sessionsIsLoading,
-    pipelineUuid,
-    projectUuid,
-    navigateTo,
-  ]);
+  }, [toggleSession, sessionsIsLoading, pipelineUuid, projectUuid, navigateTo]);
 
   React.useEffect(() => {
     if (session?.status === "RUNNING" && hasEnvironmentCheckCompleted) {
@@ -157,9 +155,7 @@ const JupyterLabView: React.FC = () => {
     conditionalRenderingOfJupyterLab();
 
     if (session?.status === "STOPPING") {
-      navigateTo(siteMap.pipeline.path, {
-        query: { projectUuid },
-      });
+      navigateTo(siteMap.pipeline.path, { query: { projectUuid } });
     }
   }, [
     session?.status,
@@ -196,24 +192,28 @@ const JupyterLabView: React.FC = () => {
 
   return (
     <Layout disablePadding>
-      <Stack
-        justifyContent="center"
-        alignItems="center"
-        sx={{ height: "100%" }}
+      <ProjectBasedView
+        sx={{ padding: (theme) => theme.spacing(4), height: "100%" }}
       >
-        <Box
-          sx={{
-            textAlign: "center",
-            width: "100%",
-            maxWidth: "400px",
-          }}
+        <Stack
+          justifyContent="center"
+          alignItems="center"
+          sx={{ height: "100%" }}
         >
-          <Typography component="h2" variant="h6" sx={{ marginBottom: 3 }}>
-            Setting up JupyterLab…
-          </Typography>
-          <LinearProgress />
-        </Box>
-      </Stack>
+          <Box
+            sx={{
+              textAlign: "center",
+              width: "100%",
+              maxWidth: "400px",
+            }}
+          >
+            <Typography component="h2" variant="h6" sx={{ marginBottom: 3 }}>
+              Setting up JupyterLab…
+            </Typography>
+            <LinearProgress />
+          </Box>
+        </Stack>
+      </ProjectBasedView>
     </Layout>
   );
 };
