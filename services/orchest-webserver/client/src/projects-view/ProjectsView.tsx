@@ -21,7 +21,6 @@ import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import LinearProgress from "@mui/material/LinearProgress";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -36,6 +35,7 @@ import { ExampleCard } from "./ExampleCard";
 import { useFetchExamples } from "./hooks/useFetchExamples";
 import { useFetchProjectsForProjectsView } from "./hooks/useFetchProjectsForProjectsView";
 import { ImportDialog } from "./ImportDialog";
+import { NoProject } from "./NoProject";
 import { ProjectTabPanel } from "./ProjectTabPanel";
 import { TempLayout } from "./TempLayout";
 
@@ -93,8 +93,6 @@ const ProjectsView: React.FC = () => {
       uuid: projectUuid,
     });
   };
-
-  console.log("DEV hey!");
 
   const closeProjectMenu = () => setSelectedProjectMenuButton(undefined);
 
@@ -357,8 +355,8 @@ const ProjectsView: React.FC = () => {
           value={projectTabIndex}
           index={PROJECT_TAB.MY_PROJECTS}
         >
-          {projectRows.length === 0 && isFetchingProjects ? (
-            <LinearProgress />
+          {projectRows.length === 0 && !isFetchingProjects ? (
+            <NoProject />
           ) : (
             <>
               <DataTable<ProjectRow>
